@@ -15,10 +15,13 @@ import { EventCard } from './event-card';
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- TODO Mod 2: Use @for to iterate over resource -->
 
-      <!-- Static Placeholders for initial verify -->
-      <app-event-card />
-      <app-event-card />
-      <app-event-card />
+      <!-- Temporary hardcoded data for testing -->
+      <app-event-card
+        title="Angular Keynote"
+        image="/images/angular-keynote.png"
+        date="2025-12-10T09:00:00.000Z"
+      />
+      <app-event-card title="Signals Deep Dive" image="/images/signals-deep-dive.png" />
     </div>
   `,
 })
