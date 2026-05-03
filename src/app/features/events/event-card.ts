@@ -1,4 +1,4 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, linkedSignal } from '@angular/core';
 
 @Component({
   selector: 'app-event-card',
@@ -45,9 +45,14 @@ import { Component, input, computed } from '@angular/core';
         <h3 class="text-xl font-bold text-gray-800 my-2">{{ title() }}</h3>
 
         <div class="flex justify-between items-center mt-4">
-          <!-- TODO Mod 1: Add Derived State (Like Button) -->
-          <button class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
-            ♡ Like
+          <button
+            (click)="toggleFavourite()"
+            [class.text-red-500]="isFavourite()"
+            class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+          >
+            <!-- Dynamic Heart Icon -->
+            <span>{{ isFavourite() ? '♥' : '♡' }}</span>
+            Like
           </button>
 
           <!-- TODO Mod 1: Add Output -->
@@ -66,7 +71,12 @@ export class EventCard {
   title = input.required<string>();
   image = input.required<string>();
   date = input<string>(); // Optional, returns Signal<string | undefined>
+  // 1. An optional input to set initial state
+  initialLike = input(false);
 
+  // 2. State that defaults to the input value, but can change
+  isFavourite = linkedSignal(() => this.initialLike());
+  
   // NEW: Computed Signal for days until the event
   daysUntil = computed(() => {
     const eventDate = this.date();
@@ -78,4 +88,9 @@ export class EventCard {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   });
+
+  toggleFavourite() {
+    // 3. Update the signal based on previous value
+    this.isFavourite.update((val) => !val);
+  }
 }
