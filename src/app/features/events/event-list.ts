@@ -19,7 +19,7 @@ import { EventCard } from './event-card';
       <app-event-card
         title="Angular Keynote"
         image="/images/angular-keynote.png"
-        date="2025-12-10T09:00:00.000Z"
+        date="2026-05-03T09:00:00.000Z"
       />
       <app-event-card title="Signals Deep Dive" image="/images/signals-deep-dive.png" />
     </div>

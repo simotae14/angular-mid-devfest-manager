@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 
 @Component({
   selector: 'app-event-card',
@@ -23,9 +23,22 @@ import { Component, input } from '@angular/core';
           <p class="text-sm text-blue-600 font-semibold mb-2">TBA</p>
 
           <!-- TODO Mod 1: Add daysUntil() using @let -->
-          <div
-            class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm"
-          ></div>
+          <!-- The Badge -->
+          @let days = daysUntil();
+
+          @if (days !== null) {
+            <div
+              class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm"
+            >
+              @if (days > 0) {
+                In {{ days }} Days
+              } @else if (days < 0) {
+                Past event
+              } @else {
+                Happening Now!
+              }
+            </div>
+          }
         </div>
 
         <!-- TODO Mod 1: Add Title Input -->
@@ -49,9 +62,20 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class EventCard {
-  // TODO Mod 1: Implement input(), output(), and model()
   // New Signal Inputs
   title = input.required<string>();
   image = input.required<string>();
   date = input<string>(); // Optional, returns Signal<string | undefined>
+
+  // NEW: Computed Signal for days until the event
+  daysUntil = computed(() => {
+    const eventDate = this.date();
+    if (!eventDate) return null; // No date provided
+
+    const today = new Date();
+    const target = new Date(eventDate);
+    const diffTime = target.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  });
 }
