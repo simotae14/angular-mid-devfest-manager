@@ -1,9 +1,10 @@
-import { Component, input, computed, linkedSignal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, input, output, computed, linkedSignal } from '@angular/core';
 
 @Component({
   selector: 'app-event-card',
   // standalone: true is DEFAULT now
-  imports: [],
+  imports: [DatePipe],
   template: `
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -20,7 +21,9 @@ import { Component, input, computed, linkedSignal } from '@angular/core';
       <div class="p-6">
         <div class="flex justify-between items-center mt-4">
           <!-- TODO Mod 1: Add Date using DatePipe -->
-          <p class="text-sm text-blue-600 font-semibold mb-2">TBA</p>
+          <p class="text-sm text-blue-600 font-semibold mb-2">
+            {{ (date() | date: 'mediumDate') || 'TBA' }}
+          </p>
 
           <!-- TODO Mod 1: Add daysUntil() using @let -->
           <!-- The Badge -->
@@ -56,7 +59,7 @@ import { Component, input, computed, linkedSignal } from '@angular/core';
           </button>
 
           <!-- TODO Mod 1: Add Output -->
-          <button class="text-gray-400 text-sm hover:text-gray-600 cursor-pointer">Remove</button>
+          <button (click)="removeEvent()" class="text-gray-400 text-sm hover:text-gray-600 cursor-pointer">Remove</button>
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-100 text-right">
@@ -73,6 +76,7 @@ export class EventCard {
   date = input<string>(); // Optional, returns Signal<string | undefined>
   // 1. An optional input to set initial state
   initialLike = input(false);
+  delete = output(); 
 
   // 2. State that defaults to the input value, but can change
   isFavourite = linkedSignal(() => this.initialLike());
@@ -92,5 +96,9 @@ export class EventCard {
   toggleFavourite() {
     // 3. Update the signal based on previous value
     this.isFavourite.update((val) => !val);
+  }
+
+  removeEvent() {
+    this.delete.emit();
   }
 }
