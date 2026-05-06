@@ -1,7 +1,8 @@
 
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { EventCard } from './event-card';
 import { SearchBar } from './search-bar';
+import { EventsService } from '../../core/events.service';
 
 @Component({
   selector: 'app-event-list',
@@ -32,7 +33,10 @@ import { SearchBar } from './search-bar';
   `,
 })
 export class EventList {
+  readonly eventsService = inject(EventsService);
+
   readonly console = console;
   searchQuery = signal('');
   // TODO Mod 2: Inject Service and use resource()
+  readonly events = this.eventsService.getEventsResource(this.searchQuery);
 }
