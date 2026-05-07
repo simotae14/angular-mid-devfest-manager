@@ -20,15 +20,28 @@ import { EventsService } from '../../core/events.service';
     <!-- TODO Mod 2: Wrap in @if (events.isLoading()) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- TODO Mod 2: Use @for to iterate over resource -->
-
-      <!-- Temporary hardcoded data for testing -->
-      <app-event-card
-        title="Angular Keynote"
-        image="/images/angular-keynote.png"
-        date="2026-05-03T09:00:00.000Z"
-        (delete)="console.log('Delete clicked')"
-      />
-      <app-event-card title="Signals Deep Dive" image="/images/signals-deep-dive.png" (delete)="console.log('Delete clicked')" />
+      @if (events.error()) {
+        <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
+          Failed to load events. Is the server running?
+        </div>
+      } 
+      @if (events.isLoading()) {
+        <div class="text-center py-12 text-gray-500 animate-pulse">Loading events...</div>
+      } 
+      @if (events.hasValue()) {
+        @for (event of events.value(); track event.id) {
+          <app-event-card
+            [title]="event.title"
+            [image]="event.image"
+            [date]="event.date"
+            (delete)="console.log('Delete clicked')"
+          />
+        } @empty {
+          <p class="col-span-3 text-center text-gray-500">No events found.</p>
+        }
+        
+      }
+      
     </div>
   `,
 })

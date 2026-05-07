@@ -11,7 +11,7 @@ export class EventsService {
   getEventsResource(query: Signal<string>) {
     return httpResource<DevFestEvent[]>(() => {
       const q = query(); // ← DEVE essere dentro la callback
-      return q ? `${this.apiUrl}?query=${q}` : this.apiUrl;
+      return q ? `${this.apiUrl}?q=${q}` : this.apiUrl;
     });
   }
 }
