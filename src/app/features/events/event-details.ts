@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
+import { EventsService } from '../../core/events.service';
 
 @Component({
   selector: 'app-event-details',
@@ -30,4 +31,9 @@ import { Component } from '@angular/core';
 })
 export class EventDetails {
   // TODO Mod 3: id = input<string>()
+  readonly id = input.required<string>();
+
+  readonly eventsService = inject(EventsService);
+
+  readonly eventResource = this.eventsService.getEventResource(this.id);
 }
