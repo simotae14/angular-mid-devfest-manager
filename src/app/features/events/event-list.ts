@@ -34,7 +34,7 @@ import { EventsService } from '../../core/events.service';
             [title]="event.title"
             [image]="event.image"
             [date]="event.date"
-            (delete)="console.log('Delete clicked')"
+            (delete)="deleteEvent(event.id)"
           />
         } @empty {
           <p class="col-span-3 text-center text-gray-500">No events found.</p>
@@ -50,6 +50,20 @@ export class EventList {
 
   readonly console = console;
   searchQuery = signal('');
-  // TODO Mod 2: Inject Service and use resource()
   readonly events = this.eventsService.getEventsResource(this.searchQuery);
+  // TODO Mod 2: Inject Service and use resource()
+  deleteEvent(id: string) {
+    this.eventsService.deleteEvent(id).subscribe({
+      next: () => {
+        // 2. On success, reload the resource
+        // This re-fetches the current list from the server
+        this.events.reload();
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+        alert('Could not delete event');
+      },
+    });
+  }
 }
+  
