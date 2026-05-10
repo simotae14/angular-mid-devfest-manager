@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { DevFestEvent } from '../../models/event.model';
-import { form, FormField, required } from '@angular/forms/signals';
+import { form, FormField, required, debounce, disabled, minLength } from '@angular/forms/signals';
 
 interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
 
@@ -65,5 +65,21 @@ export class CreateEvent {
     required(root.title, {
       message: 'Title is required',
     });
+
+    // Description Rules
+    // A. Debounce: Wait 1000ms after typing stops before updating the model
+    debounce(root.description, 1000);
+
+    // B. Conditional Disable: Disable description if Title is empty
+    // valueOf() lets us look up the current value of other fields
+    disabled(root.description, ({ valueOf }) => !valueOf(root.title));
+
+    required(root.description, { message: 'Description is required' });
+
+    minLength(root.description, 10, { message: 'Description must be at least 10 chars' });
+
+    // Other Rules
+    required(root.date, { message: 'Date is required' });
+    required(root.location, { message: 'Location is required' });
   });
 }
