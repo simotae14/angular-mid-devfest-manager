@@ -1,10 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, input, output, computed, linkedSignal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-event-card',
   // standalone: true is DEFAULT now
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   template: `
     <div
       class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -63,7 +64,7 @@ import { Component, input, output, computed, linkedSignal } from '@angular/core'
         </div>
 
         <div class="mt-4 pt-4 border-t border-gray-100 text-right">
-          <a class="text-blue-600 font-medium hover:underline cursor-pointer"> View Details → </a>
+          <a [routerLink]="['/event', id()]" class="text-blue-600 font-medium hover:underline cursor-pointer"> View Details → </a>
         </div>
       </div>
     </div>
@@ -71,8 +72,9 @@ import { Component, input, output, computed, linkedSignal } from '@angular/core'
 })
 export class EventCard {
   // New Signal Inputs
-  title = input.required<string>();
+  readonly title = input.required<string>();
   image = input.required<string>();
+  readonly id = input.required<string>(); // Add this line
   date = input<string>(); // Optional, returns Signal<string | undefined>
   // 1. An optional input to set initial state
   initialLike = input(false);
