@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { DevFestEvent } from '../../models/event.model';
+
+interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
 
 @Component({
   selector: 'app-create-event',
@@ -40,4 +43,13 @@ import { Component } from '@angular/core';
 })
 export class CreateEvent {
   // TODO Mod 4: form = form(...)
+
+  readonly eventData = signal<CreateEventForm>({
+    title: '',
+    description: '',
+    date: new Date().toISOString().slice(0, 16), // Default to now
+    location: '',
+    speakers: [],
+    image: '/images/event4.png',
+  });
 }
