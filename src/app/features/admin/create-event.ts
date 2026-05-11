@@ -11,11 +11,12 @@ interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow">
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Create New Event</h2>
 
-      <!-- TODO Mod 4: Bind [group] -->
-      <form class="space-y-6">
+      <form (submit)="onSubmit($event)" class="space-y-6">
+        <!-- Title -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
-          <!-- TODO Mod 4: Bind [control] -->
+
+          <!-- BINDING: Use [field] pointing to the form tree property -->
           <input
             [formField]="form.title"
             type="text"
@@ -29,18 +30,72 @@ interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
           }
         </div>
 
+        <!-- Description -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-          <input type="datetime-local" class="w-full px-4 py-2 border rounded-md" />
+          <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea
+            [formField]="form.description"
+            rows="3"
+            class="w-full px-4 py-2 border rounded-md outline-none"
+          ></textarea>
+
+          @if (form.description().touched() && form.description().invalid()) {
+            <p class="text-red-500 text-sm mt-1">{{ form.description().errors()[0].message }}</p>
+          }
         </div>
 
-        <!-- TODO Mod 4: Dynamic Speaker Array -->
+        <!-- Date & Location -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label>Date</label>
+            <input
+              [formField]="form.date"
+              type="datetime-local"
+              class="w-full px-4 py-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label>Location</label>
+            <input [formField]="form.location" type="text" class="w-full px-4 py-2 border rounded-md" />
+          </div>
+        </div>
 
+        <!-- (Speakers Array Next) -->
+        <div class="border-t border-gray-100 pt-4">
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium text-gray-700">Speakers</label>
+            <button type="button" (click)="addSpeaker()" class="text-sm text-blue-600 hover:underline">
+              + Add Speaker
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            <!-- Iterate over the SOURCE data to get the index -->
+            @for (speaker of eventData().speakers; track $index) {
+            <div class="flex gap-2">
+              <!-- Bind to form.speakers[index] -->
+              <input
+                [formField]="form.speakers[$index]"
+                type="text"
+                placeholder="Speaker Name"
+                class="flex-1 px-4 py-2 border rounded-md"
+              />
+
+              <button type="button" (click)="removeSpeaker($index)" class="text-red-500 px-2">✕</button>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Actions -->
         <div class="flex justify-end gap-4 pt-4">
-          <button type="button" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+          <button type="button" class="px-4 py-2 text-gray-600">Cancel</button>
+
+          <!-- Form-Level Validity: form().invalid() -->
           <button
             type="submit"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            [disabled]="form().invalid()"
+            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
             Create Event
           </button>
@@ -82,4 +137,22 @@ export class CreateEvent {
     required(root.date, { message: 'Date is required' });
     required(root.location, { message: 'Location is required' });
   });
+
+  addSpeaker() {
+    this.eventData.update((current) => ({
+      ...current,
+      speakers: [...current.speakers, ''], // aggiunge slot vuoto
+    }));
+  }
+
+  removeSpeaker(index: number) {
+    this.eventData.update((current) => ({
+      ...current,
+      speakers: current.speakers.filter((_, i) => i !== index),
+    }));
+  }
+
+  onSubmit(event: SubmitEvent) {
+    
+  }
 }
