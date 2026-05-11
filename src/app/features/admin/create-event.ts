@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { DevFestEvent } from '../../models/event.model';
 import { form, FormField, required, debounce, disabled, minLength } from '@angular/forms/signals';
+import { EventsService } from '../../core/events.service';
+import { Router } from '@angular/router';
 
 interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
 
@@ -106,6 +108,8 @@ interface CreateEventForm extends Omit<DevFestEvent, 'id'> {}
 })
 export class CreateEvent {
   // TODO Mod 4: form = form(...)
+  readonly eventService = inject(EventsService);
+  readonly router = inject(Router);
 
   readonly eventData = signal<CreateEventForm>({
     title: '',
@@ -153,6 +157,19 @@ export class CreateEvent {
   }
 
   onSubmit(event: SubmitEvent) {
-    
+    event.preventDefault();
+    if (this.form().invalid()) return;      // 1. Verify if it the form is not valid, if so, do nothing
+
+    const payload = this.eventData();      // 2. Get the current form value (which is already typed as CreateEventForm)
+
+    this.eventService.createEvent(payload).subscribe({
+      next: () => {
+        alert('Event created successfully');
+        this.router.navigate(['/']); // Navigate back to the root
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 }
