@@ -1,12 +1,14 @@
 import { HttpClient, httpResource } from "@angular/common/http";
 import { inject, Injectable, Signal } from "@angular/core";
 import { DevFestEvent } from "../models/event.model";
+import { API_URL } from "./tokens";
 
 @Injectable({
   providedIn: "root", // This is a singleton in our application
 })
 export class EventsService {
-  private apiUrl = 'http://localhost:3000/events'; // URL to web api
+  private url = inject(API_URL);
+  private apiUrl = `${this.url}/events`; // URL to web api
   private readonly http = inject(HttpClient);
 
   getEventsResource(query: Signal<string>) {
