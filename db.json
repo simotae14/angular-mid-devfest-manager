@@ -68,5 +68,10 @@
       "id": "7T85KU0"
     }
   ],
-  "tickets": []
+  "tickets": [
+    {
+      "eventId": "1",
+      "id": 1
+    }
+  ]
 }

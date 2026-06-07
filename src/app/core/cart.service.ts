@@ -37,4 +37,19 @@ export class CartService {
       error: (err) => console.error('Failed to load cart', err),
     });
   }
+
+  addTicket(eventId: string) {
+    const previousIds = this.ticketIds();
+
+    this.ticketIds.update((ids) => [...ids, eventId]);
+
+    this.http.post(this.ticketsUrl + "wrong", { eventId }).subscribe({
+        next : () => console.log('optimistic update was successful'),
+        error: (err) => {
+            console.error('Sync failed for event ID:', eventId);
+            this.ticketIds.set(previousIds); // Revert to previous state on failure
+            alert('Failed to add ticket to cart.'); // Notify user of failure
+        },
+    });
+  }
 }
