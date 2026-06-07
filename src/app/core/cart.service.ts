@@ -43,7 +43,7 @@ export class CartService {
 
     this.ticketIds.update((ids) => [...ids, eventId]);
 
-    this.http.post(this.ticketsUrl + "wrong", { eventId }).subscribe({
+    this.http.post(this.ticketsUrl, { eventId }).subscribe({
         next : () => console.log('optimistic update was successful'),
         error: (err) => {
             console.error('Sync failed for event ID:', eventId);

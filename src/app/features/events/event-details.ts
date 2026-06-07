@@ -1,4 +1,4 @@
-import { Component, input, inject } from '@angular/core';
+import { Component, input, inject, signal } from '@angular/core';
 import { EventsService } from '../../core/events.service';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -44,6 +44,7 @@ import { CartService } from '../../core/cart.service';
           <button
             class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 shadow-lg transition"
             (click)="addTicket()"
+            [disabled]="isLoading()"
           >
             Buy Tickets
           </button>
@@ -57,12 +58,16 @@ export class EventDetails {
   // TODO Mod 3: id = input<string>()
   readonly id = input.required<string>();
 
+  isLoading = signal(false);
+
   readonly eventsService = inject(EventsService);
   readonly cartService = inject(CartService);
 
   readonly eventResource = this.eventsService.getEventResource(this.id);
 
   addTicket() {
+    this.isLoading.set(true);
     this.cartService.addTicket(this.id());
+    this.isLoading.set(false);
   }
 }
