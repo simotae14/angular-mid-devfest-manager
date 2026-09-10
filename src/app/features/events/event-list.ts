@@ -9,7 +9,7 @@ import { EventsService } from '../../core/events.service';
   imports: [EventCard, SearchBar],
   template: `
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-4">Upcoming Events</h1>
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ title() }}</h1>
       <!-- TODO Mod 1: Add SearchBar here -->
        <!-- Two-way binding syncs parent signal <-> child model -->
       <app-search-bar [(query)]="searchQuery" />
@@ -51,6 +51,13 @@ export class EventList {
 
   readonly console = console;
   searchQuery = signal('');
+  title = signal('Upcoming Events');
+
+  constructor() {
+    setTimeout(() => {
+      this.title.set('All Events');
+    }, 5000);
+  }
   readonly events = this.eventsService.getEventsResource(this.searchQuery);
   // TODO Mod 2: Inject Service and use resource()
   deleteEvent(id: string) {
