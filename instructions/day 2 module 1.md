@@ -132,6 +132,7 @@ export const appConfig: ApplicationConfig = {
   ],
 };
 ```
+https://suehnrivzzynsrofjzrl.supabase.co/storage/v1/object/sign/courses/angular-keynote.png?token=eyJraWQiOiI5MjhmYjA4MS0zYjg2LTRmMzItYjIwNC1mMzQ3YWI2ZTBkYmUiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjb3Vyc2VzL2FuZ3VsYXIta2V5bm90ZS5wbmciLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzkwODc0Mjg2LCJleHAiOjE4NzcyNzQyODZ9.bQWJdkpQoxeDTGknqgjtGCw7kdQfTSwcKxUhhFD8GE_CpKNwcYiTnszNsYxd04WdS9cqGQJxAsDFzMcKlHkUQA
 
 ---
 
